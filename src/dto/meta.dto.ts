@@ -1,5 +1,5 @@
 export default class Meta {
-    public date:Date;
+    public date:Date | null;
     public httpCode:number;
     public error:Error | Error[] | null;
 }
