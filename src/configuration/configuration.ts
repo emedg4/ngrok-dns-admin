@@ -20,6 +20,7 @@ export default () => ({
         auth:process.env.PAUTH,
         api:process.env.API_KEY,
         secret:process.env.SECRET_KEY,
+        domain:process.env.DOMAIN
 
     }
 })
