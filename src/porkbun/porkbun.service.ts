@@ -25,6 +25,7 @@ export default class PorkBunService implements IPorkBunService {
                 response.meta.date = Date();
                 response.data = createRecordResponse.data;
                 return response;
+                console.log("nada")
             }
         } catch (error) {
             
