@@ -11,6 +11,15 @@ export default () => ({
             db:process.env.DBPGDB,
             user:process.env.DBPGUSER
         }
+    },
+    porkbun:{
+        create:process.env.PCREATE,
+        edit:process.env.PEDIT,
+        delete:process.env.PDELETE,
+        retrieve:process.env.PRETRIEVE,
+        auth:process.env.PAUTH,
+        api:process.env.API_KEY,
+        secret:process.env.SECRET_KEY,
 
     }
 })

@@ -3,11 +3,13 @@ import DnsAdminModule from './dns-admin/dns-admin.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
 
 
 @Module({
   imports: [
     DnsAdminModule,
+    HttpModule,
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal:true
