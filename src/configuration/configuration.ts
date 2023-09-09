@@ -16,6 +16,7 @@ export default () => ({
         create:process.env.PCREATE,
         edit:process.env.PEDIT,
         delete:process.env.PDELETE,
+        get:process.env.PGET,
         retrieve:process.env.PRETRIEVE,
         auth:process.env.PAUTH,
         api:process.env.API_KEY,

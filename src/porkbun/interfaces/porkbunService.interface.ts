@@ -13,6 +13,6 @@ export default interface IPorkBunService {
     editDomain(data:DnsEditRecordByDomainAndId):Promise<EditRecordByDomainAndIdResponse>;
     getDomain(data:GetDomainNamesDto):Promise<GetDomainNamesResponse>;
     retrieveRecordsByDomain(data:DnsRetrieveRecordsByDomainDto):Promise<RetrieveRecordsByDomainDto>;
-    retrieveDomainById(data:DnsRetrieveRecordsByDomainDto):Promise<RetrieveRecordsByDomainDto>;
+    // retrieveDomainById(data:DnsRetrieveRecordsByDomainDto):Promise<RetrieveRecordsByDomainDto>;
     deleteRecordByDomainAndId(data:DnsDeleteRecordByDomainAndId):Promise<DeleteRecordByDomainAndIdResponse>;
 }
