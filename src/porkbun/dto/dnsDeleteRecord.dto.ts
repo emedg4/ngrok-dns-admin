@@ -1,8 +1,9 @@
-import { PorkBunAuthentication } from "./auth.dto";
-import { DnsEditRecordByDomainAndIdResponse } from "./dnsEditRecordByDomainAndId.dto";
-
-export class DnsDeleteRecordByDomainAndId extends PorkBunAuthentication {
+export class DnsDeleteRecordByDomainAndId{
     id:number;
+    public secretapikey: string;
+    public apikey: string;
 }
 
-export class DnsDeleteRecordByDomainAndIdResponse extends DnsEditRecordByDomainAndIdResponse {}
+export class DnsDeleteRecordByDomainAndIdResponse{
+    public status:string;
+}

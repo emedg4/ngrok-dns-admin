@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Logger, Put } from "@nestjs/common";
+import { Body, Controller, Get, Logger, Post, Put } from "@nestjs/common";
 import PorkBunService from "./porkbun.service";
-import { CreateDomainResponse, EditDomainResponse } from "./dto/controllerResponses.dto";
+import { CreateDomainResponse, EditDomainResponse, GetDomainResponse } from "./dto/controllerResponses.dto";
 import { DnsCreateRecordDto } from "./dto/dnsCreateRecord.dto";
-import { CreateRecordResponseDto, EditRecordByDomainAndIdResponse } from "./dto/porkbunServiceResponses.dto";
+import { CreateRecordResponseDto, EditRecordByDomainAndIdResponse, GetDomainNamesResponse } from "./dto/porkbunServiceResponses.dto";
 import { DnsEditRecordByDomainAndId } from "./dto/dnsEditRecordByDomainAndId.dto";
+import { GetDomainNamesDto, GetDomainNamesResponseDto } from "./dto/domainGetNameServers.dto";
 
 @Controller("pork")
 export default class PorkBunController {
@@ -11,7 +12,7 @@ export default class PorkBunController {
     constructor(private porkBunService:PorkBunService){
         this.logger = new Logger(PorkBunController.name)
     }
-    @Get("create")
+    @Post("create")
     public async createDomain(@Body() body:DnsCreateRecordDto):Promise<CreateDomainResponse>{
         try {
             //TODO Verificar si el body es del tipo que esta establecido
@@ -41,5 +42,20 @@ export default class PorkBunController {
             this.logger.error(e);
             return e;         
         }
+    }
+
+    @Post("getDomain")
+    public async getDomain(@Body() body:GetDomainNamesDto){
+        try {
+            const porkbunServiceResponse:GetDomainNamesResponseDto = (await this.porkBunService.getDomain(body)).data;
+            const response:GetDomainResponse = new GetDomainResponse();
+            response.data = porkbunServiceResponse;
+            response.httpcode = 200;
+            return response;
+        } catch (e) {
+            this.logger.error(e);
+            return e;    
+        }
+        
     }
 }
