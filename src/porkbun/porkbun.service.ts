@@ -1,7 +1,6 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpCode, Injectable, Logger } from "@nestjs/common";
 import IPorkBunService from "./interfaces/porkbunService.interface";
 import { DnsCreateRecordDto } from "./dto/dnsCreateRecord.dto";
-import { CreateRecordResponseDto, DeleteRecordByDomainAndIdResponse, EditRecordByDomainAndIdResponse, GetDomainNamesResponse, RetrieveRecordsByDomainDto } from "./dto/porkbunServiceResponses.dto";
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
 import { CREATE_RESPONSE, OK_RESPONSE } from "./constants/porkbunConstants";
@@ -9,6 +8,8 @@ import { firstValueFrom } from 'rxjs';
 import { DnsEditRecordByDomainAndId } from "./dto/dnsEditRecordByDomainAndId.dto";
 import { DnsDeleteRecordByDomainAndId } from "./dto/dnsDeleteRecord.dto";
 import { GetDomainNamesDto, DnsRetrieveRecordsByDomainDto } from "./dto/domainGetNameServers.dto";
+import { CreateDomainResponse, EditDomainResponse, GetDomainResponse, DeleteRecordByDomainAndIdResponse, RetrieveRecordsByDomain } from "./dto/controllerResponses.dto";
+import { HTTPCodes } from "src/constants/httpcodes";
 
 
 @Injectable()
@@ -19,19 +20,21 @@ export default class PorkBunService implements IPorkBunService {
         this.logger = new Logger(PorkBunService.name)
     }
 
-    public async createDomain(data:DnsCreateRecordDto):Promise<CreateRecordResponseDto>{
+    public async createDomain(data:DnsCreateRecordDto):Promise<CreateDomainResponse>{
         try {
             const url:string = this.configService.get("porkbun.create");
             const createRecordResponse = await firstValueFrom(this.httpService.post(url, data))
             if(createRecordResponse.status == CREATE_RESPONSE || OK_RESPONSE){
-                const response:CreateRecordResponseDto = new CreateRecordResponseDto();
+                const response:CreateDomainResponse = new CreateDomainResponse();
+                response.data = createRecordResponse.data;
+                response.httpcode = HTTPCodes.OK;
                 return response;
             }
         } catch (error) {
             this.logger.log(error)
         } 
     }
-    public async editDomain(data:DnsEditRecordByDomainAndId):Promise<EditRecordByDomainAndIdResponse> {
+    public async editDomain(data:DnsEditRecordByDomainAndId):Promise<EditDomainResponse> {
         try {
             const uri:string = this.configService.get("porkbun.edit");
             const domain:string = this.configService.get("porkbun.domain");
@@ -39,7 +42,9 @@ export default class PorkBunService implements IPorkBunService {
             const url:string = uri + domain + "/" + id;
             const editRecordResponse = await firstValueFrom(this.httpService.post(url, data))
             if(editRecordResponse.status == OK_RESPONSE){
-                const response:EditRecordByDomainAndIdResponse = new EditRecordByDomainAndIdResponse();
+                const response:EditDomainResponse = new EditDomainResponse();
+                response.data = editRecordResponse.data;
+                response.httpcode = HTTPCodes.OK;
                 return response;
             }
         } catch (error) {
@@ -47,13 +52,16 @@ export default class PorkBunService implements IPorkBunService {
         }
     }
 
-    public async getDomain(data:GetDomainNamesDto):Promise<GetDomainNamesResponse> {
+    public async getDomain(data:GetDomainNamesDto):Promise<GetDomainResponse> {
         try {
             const uri:string = this.configService.get("porkbun.get");
             const domain:string = this.configService.get("porkbun.domain");
             const url:string = uri + domain;
             const getRecordResponse = await firstValueFrom(this.httpService.post(url, data))
             if(getRecordResponse.status == OK_RESPONSE) {
+                const response:GetDomainResponse = new GetDomainResponse();
+                response.data = getRecordResponse.data;
+                response.httpcode = HTTPCodes.OK;
                 return getRecordResponse.data;
             }
 
@@ -62,13 +70,16 @@ export default class PorkBunService implements IPorkBunService {
         }
     }
 
-    public async retrieveRecordsByDomain(data:DnsRetrieveRecordsByDomainDto):Promise<RetrieveRecordsByDomainDto> {
+    public async retrieveRecordsByDomain(data:DnsRetrieveRecordsByDomainDto):Promise<DeleteRecordByDomainAndIdResponse> {
         try {
             const uri:string = this.configService.get("porkbun.retrieve");
             const domain:string = this.configService.get("porkbun.domain");
             const url:string = uri + domain;
             const retrieveRecordResponse = await firstValueFrom(this.httpService.post(url, data))  ;
             if(retrieveRecordResponse.status == OK_RESPONSE){
+                const response:DeleteRecordByDomainAndIdResponse = new DeleteRecordByDomainAndIdResponse();
+                response.data = retrieveRecordResponse.data;
+                response.httpcode = HTTPCodes.OK;
                 return retrieveRecordResponse.data;
             }         
         } catch (e) {
@@ -76,7 +87,7 @@ export default class PorkBunService implements IPorkBunService {
         }
     }
 
-    public async deleteRecordByDomainAndId(data:DnsDeleteRecordByDomainAndId):Promise<DeleteRecordByDomainAndIdResponse> {
+    public async deleteRecordByDomainAndId(data:DnsDeleteRecordByDomainAndId):Promise<RetrieveRecordsByDomain> {
         try {
             const uri:string = this.configService.get("porkbun.delete");
             const domain:string = this.configService.get("porkbun.domain");
@@ -84,6 +95,9 @@ export default class PorkBunService implements IPorkBunService {
             const url:string = uri + domain + "/" + id;
             const deleteRecordResponse = await firstValueFrom(this.httpService.post(url, data));
             if(deleteRecordResponse.status == OK_RESPONSE) {
+                const response:RetrieveRecordsByDomain = new RetrieveRecordsByDomain();
+                response.data = deleteRecordResponse.data;
+                response.httpcode = HTTPCodes.OK;
                 return deleteRecordResponse.data;
             }
         } catch(e) {

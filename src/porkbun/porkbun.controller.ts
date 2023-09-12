@@ -2,9 +2,9 @@ import { Body, Controller, Get, Logger, Post, Put } from "@nestjs/common";
 import PorkBunService from "./porkbun.service";
 import { CreateDomainResponse, EditDomainResponse, GetDomainResponse } from "./dto/controllerResponses.dto";
 import { DnsCreateRecordDto } from "./dto/dnsCreateRecord.dto";
-import { CreateRecordResponseDto, EditRecordByDomainAndIdResponse, GetDomainNamesResponse } from "./dto/porkbunServiceResponses.dto";
+import { CreateRecordResponseDto, EditRecordByDomainAndIdResponse, GetDomainNamesResponse, RetrieveRecordsByDomainDto } from "./dto/porkbunServiceResponses.dto";
 import { DnsEditRecordByDomainAndId } from "./dto/dnsEditRecordByDomainAndId.dto";
-import { GetDomainNamesDto, GetDomainNamesResponseDto } from "./dto/domainGetNameServers.dto";
+import { DnsRetrieveRecordsByDomainDto, GetDomainNamesDto, GetDomainNamesResponseDto } from "./dto/domainGetNameServers.dto";
 
 @Controller("pork")
 export default class PorkBunController {
@@ -56,6 +56,17 @@ export default class PorkBunController {
             this.logger.error(e);
             return e;    
         }
-        
+    
     }
+    @Post("retrieve")
+    public async RetrieveRecordsByDomain(@Body() data:DnsRetrieveRecordsByDomainDto):Promise<>{
+        try {
+            const porkbunServiceResponse:RetrieveRecordsByDomainDto = await this.porkBunService.retrieveRecordsByDomain(data);
+            const response:
+
+        } catch (e) {
+            
+        }
+    }
+    
 }
