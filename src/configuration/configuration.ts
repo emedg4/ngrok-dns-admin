@@ -23,5 +23,11 @@ export default () => ({
         secret:process.env.SECRET_KEY,
         domain:process.env.DOMAIN
 
+    },
+    ngrok:{
+        apiKey:process.env.NGROKAPIKEY,
+        url:{
+            tunnels:process.env.NGROK_TUNNELS_URL
+        }
     }
 })
