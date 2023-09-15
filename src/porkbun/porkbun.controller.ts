@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Logger, Post, Put } from "@nestjs/common";
+import { Body, Controller, Logger, Post, Put } from "@nestjs/common";
 import PorkBunService from "./porkbun.service";
-import { CreateDomainResponse, EditDomainResponse, GetDomainResponse } from "./dto/controllerResponses.dto";
+import { CreateDomainResponse, DeleteRecordByDomainAndIdResponse, EditDomainResponse, GetDomainResponse } from "./dto/controllerResponses.dto";
 import { DnsCreateRecordDto } from "./dto/dnsCreateRecord.dto";
-import { CreateRecordResponseDto, EditRecordByDomainAndIdResponse, GetDomainNamesResponse, RetrieveRecordsByDomainDto } from "./dto/porkbunServiceResponses.dto";
 import { DnsEditRecordByDomainAndId } from "./dto/dnsEditRecordByDomainAndId.dto";
 import { DnsRetrieveRecordsByDomainDto, GetDomainNamesDto, GetDomainNamesResponseDto } from "./dto/domainGetNameServers.dto";
 
@@ -17,9 +16,9 @@ export default class PorkBunController {
         try {
             //TODO Verificar si el body es del tipo que esta establecido
             // investigar pipes
-            const porkbunServiceResponse:CreateRecordResponseDto = await this.porkBunService.createDomain(body);
+            const porkbunServiceResponse:CreateDomainResponse = await this.porkBunService.createDomain(body);
             const response:CreateDomainResponse = new CreateDomainResponse()
-            response.data = porkbunServiceResponse;
+            response.data = porkbunServiceResponse.data;
             response.httpcode = 200;
             //TODO, CREAR MANEJADOR DE ESTADOS HTTP
             return response;
@@ -33,9 +32,9 @@ export default class PorkBunController {
     public async editDomain(@Body() body:DnsEditRecordByDomainAndId):Promise<EditDomainResponse>{
         try {
             //the last commit was made with another account, was a mistake.
-            const porkbunServiceResponse:EditRecordByDomainAndIdResponse = await this.porkBunService.editDomain(body)
+            const porkbunServiceResponse:EditDomainResponse = await this.porkBunService.editDomain(body)
             const response:EditDomainResponse = new EditDomainResponse();
-            response.data = porkbunServiceResponse;
+            response.data = porkbunServiceResponse.data;
             response.httpcode = 200;
             return response
         } catch (e) {
@@ -59,13 +58,16 @@ export default class PorkBunController {
     
     }
     @Post("retrieve")
-    public async RetrieveRecordsByDomain(@Body() data:DnsRetrieveRecordsByDomainDto):Promise<>{
+    public async RetrieveRecordsByDomain(@Body() data:DnsRetrieveRecordsByDomainDto):Promise<DeleteRecordByDomainAndIdResponse>{
         try {
-            const porkbunServiceResponse:RetrieveRecordsByDomainDto = await this.porkBunService.retrieveRecordsByDomain(data);
-            const response:
-
+            const porkbunServiceResponse:DeleteRecordByDomainAndIdResponse = await this.porkBunService.retrieveRecordsByDomain(data);
+            const response:DeleteRecordByDomainAndIdResponse = new DeleteRecordByDomainAndIdResponse();
+            response.data = porkbunServiceResponse.data
+            response.httpcode = 200;
+            return response;
         } catch (e) {
-            
+            this.logger.error(e)
+            return e
         }
     }
     

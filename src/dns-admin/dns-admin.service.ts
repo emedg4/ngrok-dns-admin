@@ -10,7 +10,7 @@ export default class DnsAdminService {
     }
 
     @Cron('* 1 * * * *')
-    private retryNgrokServices(){
+    private void retryNgrokServices(){
         
 
     }
