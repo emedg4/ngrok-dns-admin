@@ -12,7 +12,7 @@ export default class DnsAdminController {
     public async getDns():Promise <DNS[]> {
         try {
             const response: DNS[] = 
-            
+            console.log("t4esting")
         } catch (error) {
             
         }
